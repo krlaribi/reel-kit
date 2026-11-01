@@ -3,6 +3,11 @@
 Small command-line tools I use to make short-form documentary reels with code and Claude Code.
 Each one does one job in the production line, and each was written because I kept doing that job by hand.
 
+<p align="center">
+  <img src="docs/quartz.gif" width="280" alt="Opening of the reel 'Quartz': a Swiss village in 1967, then a grid of watchmakers emptying out">
+  <br><sub>The opening of <i>Quartz</i>, checked with these tools before it went out. More on <a href="https://www.instagram.com/anatomyofideass/">@anatomyofideass</a>.</sub>
+</p>
+
 | Tool | What it does |
 |---|---|
 | [`qa/qa.py`](qa/qa.py) | Checks a render before anyone sees it: black frames, one-frame dropouts, frozen stretches, flicker, silent gaps, clipping, shot lengths. Writes a contact sheet with timecodes. Exits 1 on a fault, so it can gate a render. |
