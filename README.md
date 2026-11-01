@@ -18,7 +18,7 @@ You need [uv](https://docs.astral.sh/uv/). It fetches every Python dependency on
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
-git clone https://github.com/<you>/reel-kit && cd reel-kit
+git clone https://github.com/krlaribi/reel-kit && cd reel-kit
 ```
 
 ## Use
