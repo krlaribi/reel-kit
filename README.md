@@ -55,6 +55,7 @@ uv run --with pillow --with imageio-ffmpeg --with faster-whisper python teardown
 ```
 
 Open `refs/that-reel/sheets/` to see every cut and how long each shot holds, or hand the folder to Claude and ask what makes it work.
+For the full breakdown as a Claude Code skill, see [reel-teardown](https://github.com/krlaribi/reel-teardown).
 If a platform serves picture and sound as separate streams, pass the audio as a third argument.
 Only study videos you have the right to use.
 

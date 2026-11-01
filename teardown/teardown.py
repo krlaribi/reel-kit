@@ -6,7 +6,7 @@
 <video> is a local file or a direct .mp4 link. Pass <audio> too when the platform serves picture
 and sound as separate streams (DASH); they are muxed into src.mp4.
 Writes src.mp4, cuts.txt (seconds), sheets/ (a frame every 0.33 s with its time printed, 8x5 per
-sheet) and transcript.txt (skipped if faster-whisper is missing). Hand the folder to Claude, or
+sheet), transcript.txt (skipped if faster-whisper is missing) and stats.txt (duration, shots, pace). Hand the folder to Claude, or
 read the sheets yourself, to see exactly how a video is paced and cut.
 Uses ffmpeg from FFMPEG, then PATH, then the imageio-ffmpeg package. Study videos you have the right to use.
 """
@@ -59,6 +59,10 @@ def main(out, video, audio=None):
             cuts.append(round(i / fps, 2))
         prev = im
     open(out + "/cuts.txt", "w").write(" ".join(map(str, cuts)) + "\n")
+    dur = len(fr) / fps
+    shots = [b - a for a, b in zip([0] + cuts, cuts + [dur])]
+    stats = [f"duration {dur:.1f} s", f"shots {len(shots)}, average {dur / len(shots):.2f} s, longest {max(shots):.2f} s",
+             f"first cut {cuts[0] if cuts else dur:.2f} s, cuts in the first 3 s: {sum(c < 3 for c in cuts)}"]
     sel, n, W, H = fr[::2], 40, 270, 480
     for s in range(0, len(sel), n):
         chunk = sel[s:s + n]
@@ -76,16 +80,24 @@ def main(out, video, audio=None):
     try:
         from faster_whisper import WhisperModel
     except ImportError:
-        print("faster-whisper not installed: no transcript"); print("cuts", cuts); return
+        open(out + "/stats.txt", "w").write("\n".join(stats) + "\n")
+        print("faster-whisper not installed: no transcript"); print("\n".join(stats)); return
     import numpy as np                           # raw 16 kHz samples, so Whisper never has to decode the file itself
     pcm = subprocess.run([FF, "-v", "error", "-i", out + "/src.mp4", "-vn", "-ac", "1", "-ar", "16000",
                           "-f", "f32le", "-"], check=True, capture_output=True).stdout
     segs, _ = WhisperModel("small", compute_type="int8").transcribe(np.frombuffer(pcm, np.float32), word_timestamps=True)
+    words = []
     with open(out + "/transcript.txt", "w") as t:
         for s in segs:
             t.write(f"[{s.start:6.2f}-{s.end:6.2f}] {s.text}\n")
             t.write("   " + " ".join(f"{w.word.strip()}@{w.start:.2f}" for w in s.words) + "\n")
-    print("cuts", cuts)
+            words += s.words
+    if words:
+        spoken = words[-1].end - words[0].start
+        stats += [f"words {len(words)}, {len(words) / spoken:.1f} words/s while speaking",
+                  f"first word at {words[0].start:.2f} s, words in the first 3 s: {sum(w.start < 3 for w in words)}"]
+    open(out + "/stats.txt", "w").write("\n".join(stats) + "\n")
+    print("\n".join(stats))
 
 
 if __name__ == "__main__":
