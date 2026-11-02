@@ -19,14 +19,28 @@ New to making reels? Start with **[the principles](docs/PRINCIPLES.md)**: ten ru
 | [`voice/closemic.py`](voice/closemic.py) | Repairs close-mic takes: mouth clicks, plosive pops, harsh S's, hot peaks. |
 | [`voice/lift.py`](voice/lift.py) | Changes a voice-over's pace and pitch without artefacts. |
 
-## Setup
+## What you need
 
-You need [uv](https://docs.astral.sh/uv/). It fetches every Python dependency on the fly, ffmpeg included, so there's nothing else to install.
+- **[uv](https://docs.astral.sh/uv/)**, a free installer. It fetches every Python dependency the first time a tool runs, ffmpeg included,
+  so there's nothing else to install.
+- **[Claude Code](https://claude.com/claude-code)**, only for the reel-qa agent. The scripts run without it.
+
+You don't need Remotion, After Effects or any voice app. The tools work on any finished video or any voice recording,
+whatever made it: CapCut, Premiere, Remotion, a phone memo or a downloaded voice-over.
+
+For studying reels from a link (YouTube, TikTok, Instagram), use [reel-teardown](https://github.com/krlaribi/reel-teardown#what-you-need);
+it explains how to get each one.
+
+## Setup
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 git clone https://github.com/krlaribi/reel-kit && cd reel-kit
 ```
+
+Never used git? Click the green **Code** button on this page → **Download ZIP** and unzip it. Open the Terminal in that folder
+(Finder: right-click the folder → New Terminal at Folder) and run the commands below from there.
+Or ask Claude Code: *"Download github.com/krlaribi/reel-kit and check my render with it."*
 
 ## Use
 
